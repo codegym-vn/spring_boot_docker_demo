@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  mysqldb:
+    image: "mysql:8.0.31"
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - springapimysql-net
+    environment:
+      MYSQL_DATABASE: basics
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: 123456@Abc
+      MYSQL_ROOT_PASSWORD: Amila_Rpw
+
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - springapimysql-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/basics?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: user1
+      SPRING_DATASOURCE_PASSWORD: 123456@Abc
+    depends_on:
+      - mysqldb
+    volumes:
+      - .m2:/root/.m2
+networks:
+  springapimysql-net:
